@@ -1,10 +1,14 @@
 import { contextBridge, ipcRenderer } from "electron";
 
+// APIをウィンドウに公開
 contextBridge.exposeInMainWorld("electronAPI", {
-  on: (channel, callback) => {
-    ipcRenderer.on(channel, callback);
+  saveTodos: async (data) => {
+    return await ipcRenderer.invoke("save-todos", data);
   },
-  send: (channel, args) => {
-    ipcRenderer.send(channel, args);
+  loadTodos: async () => {
+    return await ipcRenderer.invoke("load-todos");
+  },
+  getSavePath: async () => {
+    return await ipcRenderer.invoke("get-save-path");
   },
 });
